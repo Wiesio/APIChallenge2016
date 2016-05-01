@@ -1,10 +1,20 @@
-<h1 class="heading -large">{{ home.title | ExampleFilter }}</h1>
+<div class="row">
+    <div class="small-12 columns">
+        <form ng-submit="home.searchSummoner(home.form)">
+            <div class="row">
+                <div class="small-6 columns">
+                    <input type="text" placeholder="Summoner name" name="username" ng-model="home.form.name">
+                </div>
+                <div class="small-3 columns">
+                    <select name="region" ng-model="home.form.region">
+                        <option ng-repeat="region in home.regions" value="{{ region.id }}">{{ region.name }}</option>
+                    </select>
+                </div>
+                <div class="small-3 column">
+                    <button class="button">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
-<h3 class="heading -medium">Here is a fancy number served up courtesy of Angular: <span class="number-example">{{ home.number }}</span></h3>
-
-<img src="images/angular.png" height="100" />
-<img src="images/gulp.png" height="100" />
-<img src="images/browserify.png" height="100" />
-
-<hr/>
-<div example-directive title="WOW!" click-message="You clicked me!">Directive is not loaded.</div>
