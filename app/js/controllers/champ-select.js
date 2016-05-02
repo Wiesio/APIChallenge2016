@@ -9,7 +9,17 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
     let lastPickPosition = null;
     let teamPick = null;
     vm.bans = {};
+    vm.userPicks = [];
 
+    API.getUserPicks({
+        id: UserDataService.getUserId(),
+        region: UserDataService.getUserRegion()
+    }).success((data) => {
+        vm.userPicks = data;
+    }).error(() => {
+        console.log('error');
+    });
+    
     API.getSuggestedBans().success((data) => {
         vm.bans = data;
     }).error(() => {

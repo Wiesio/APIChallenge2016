@@ -16,6 +16,9 @@ function API($http) {
   service.getPicksList = function(data) {
     return $http.post(apiPath + 'getPicks.json', data);
   };
+  service.getUserPicks = function(data) {
+    return $http.post(apiPath + 'getUserPicks.json', data);
+  };
 
   return service;
 }

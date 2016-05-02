@@ -1,4 +1,10 @@
 <div class="row text-center">
+    <h2>Your most played champions</h2>
+    <ul class="bans bans--center">
+        <li class="bans__item" ng-repeat="pick in champ.userPicks" popover="{{ pick.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
+            <img src="{{ pick.image }}" alt="{{ pick.champion }}" class="bans__image" width="50" height="50">
+        </li>
+    </ul>
     <h2>Suggested Bans</h2>
     <ul class="bans bans--center">
         <li class="bans__item" ng-repeat="ban in champ.bans" popover="{{ ban.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
