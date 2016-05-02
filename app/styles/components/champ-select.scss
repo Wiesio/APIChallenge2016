@@ -1,0 +1,22 @@
+.champ-select {
+  margin-top: 32px;
+  &__picks-list {
+    margin: -8px;
+    padding: 0;
+    list-style: none;
+    &:after {
+      content: '';
+      clear: both;
+      display: block;
+    }
+  }
+  &__item {
+    float: left;
+    width: 16.66666666666667%;
+    padding: 8px;
+  }
+  &__pick {
+    width: 100%;
+    height: auto;
+  }
+}

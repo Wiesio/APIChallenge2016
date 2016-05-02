@@ -8,3 +8,6 @@ body {
   background-color: $background--light;
   padding: $half-space;
 }
+
+@import 'components/bans';
+@import 'components/champ-select';

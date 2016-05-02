@@ -1,0 +1,42 @@
+[
+  {
+    "champion": "Kindred",
+    "image": "http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/Kindred.png"
+  },
+  {
+    "champion": "Ekko",
+    "image": "http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/Ekko.png"
+  },
+  {
+    "champion": "Zed",
+    "image": "http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/Zed.png"
+  },
+  {
+    "champion": "Malphite",
+    "image": "http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/Malphite.png"
+  },
+  {
+    "champion": "Soraka",
+    "image": "http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/Soraka.png"
+  },
+  {
+    "champion": "Maokai",
+    "image": "http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/Maokai.png"
+  },
+  {
+    "champion": "Taric",
+    "image": "http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/Taric.png"
+  },
+  {
+    "champion": "Master Yi",
+    "image": "http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/MasterYi.png"
+  },
+  {
+    "champion": "Nidalee",
+    "image": "http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/Nidalee.png"
+  },
+  {
+    "champion": "Gragas",
+    "image": "http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/Gragas.png"
+  }
+]

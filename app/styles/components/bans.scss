@@ -1,0 +1,28 @@
+.bans {
+  margin: 0 -8px;
+  padding: 0;
+  list-style: none;
+  &:after {
+    content: '';
+    clear: both;
+    display: block;
+  }
+  &--center {
+    display: inline-block;
+  }
+  &--right {
+    float: right;
+  }
+  &__item {
+    float: left;
+    padding: 0 8px;
+  }
+  &__placeholder {
+    display: block;
+    background: #000;
+  }
+  &__image {
+    width: 50px;
+    height: 50px;
+  }
+}
