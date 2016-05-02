@@ -1,4 +1,0 @@
-{
-"user": "Test",
-"region": "EUNE"
-}
