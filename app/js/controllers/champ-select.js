@@ -6,6 +6,8 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
     }
 
     let lastBanPosition = null;
+    let lastPickPosition = null;
+    let teamPick = null;
     vm.bans = {};
 
     API.getSuggestedBans().success((data) => {
@@ -15,12 +17,29 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
     });
 
     vm.teamsBans = new Array(6);
-    
+    vm.allyTeam = new Array(5);
+    vm.enemyTeam = new Array(5);
+
     for(let i = 0; i < vm.teamsBans.length; i++) {
         if (i < 3) {
             vm.teamsBans[i] = {side: 'left'}
         } else {
             vm.teamsBans[i] = {side: 'right'}            
+        }
+    }
+    
+    for(let i = 0; i < vm.allyTeam.length; i++) {
+        vm.allyTeam[i] = {
+            user: false,
+            role: '0',
+            champion: null,
+            championImage: null
+        }
+    }
+    for(let i = 0; i < vm.enemyTeam.length; i++) {
+        vm.enemyTeam[i] = {
+            champion: null,
+            championImage: null
         }
     }
 
@@ -38,11 +57,41 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
         }
 
         lastBanPosition = position;
+        lastPickPosition = null;
         vm.showPicks = true;
     };
 
-    vm.selectChampion = function(index) {
-        let champion = vm.picks[index];
+    vm.choosePick = function(side, position) {
+        let userPick = false;
+        if (side === 'ally') {
+            if (vm.allyTeam[position].user === 'user') {
+                userPick = {
+                    id: UserDataService.getUserId(),
+                    region: UserDataService.getUserRegion()
+                };
+            }
+        }
+
+        API.getPicksList({
+            user: userPick,
+            bans: vm.teamsBans,
+            allyPicks: vm.allyTeam,
+            enemyPicks: vm.enemyTeam
+        }).success((data) => {
+            vm.picks = data;
+        }).error(() => {
+            console.log('error');
+        });
+
+        teamPick = side;
+        lastPickPosition = position;
+        lastBanPosition = null;
+        vm.showPicks = true;
+    };
+
+    vm.selectChampion = function(id) {
+        let champion = getChampion(id);
+        
         if (lastBanPosition !== null) {
             vm.teamsBans[lastBanPosition].champion = champion.champion;
             vm.teamsBans[lastBanPosition].image = champion.image;
@@ -50,8 +99,29 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
             lastBanPosition = null;
         }
 
+        if (lastPickPosition !== null) {
+            if (teamPick === 'ally') {
+                vm.allyTeam[lastPickPosition].champion = champion.champion;
+                vm.allyTeam[lastPickPosition].championImage = champion.image;
+            } else if (teamPick === 'enemy') {
+                vm.enemyTeam[lastPickPosition].champion = champion.champion;
+                vm.enemyTeam[lastPickPosition].championImage = champion.image;
+            }
+        }
+
         vm.showPicks = false;
+        vm.championName = '';
     };
+
+    function getChampion(id) {
+        let champion =  vm.picks.filter(function(element) {
+            if (element.id === id) {
+                return element;
+            }
+        });
+
+        return champion[0];
+    }
 }
 
 ChampSelectCtrl.$inject = ['$state', 'UserDataService', 'API'];

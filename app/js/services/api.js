@@ -13,6 +13,9 @@ function API($http) {
   service.getBansList = function(data) {
     return $http.post(apiPath + 'getBans.json', data);
   };
+  service.getPicksList = function(data) {
+    return $http.post(apiPath + 'getPicks.json', data);
+  };
 
   return service;
 }

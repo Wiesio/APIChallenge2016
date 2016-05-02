@@ -13,19 +13,41 @@
             <h2>Bans</h2>
             <ul class="bans">
                 <li class="bans__item" ng-repeat="ban in champ.teamsBans | filter:{side: 'left'}">
-                    <a href="#" class="bans__placeholder" ng-click="champ.chooseBan('left', $index)" popover="{{ ban.champion }}" popover-trigger="mouseenter" popover-placement="left" popover-animation="false">
+                    <a href="#" class="bans__placeholder" ng-click="champ.chooseBan('left', $index)" popover="{{ ban.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
                         <img src="{{ ban.image }}" alt="{{ ban.champion }}" class="bans__image" width="50" height="50">
                     </a>
+                </li>
+            </ul>
+            <h2>Your team</h2>
+            <ul class="team">
+                <li class="team__item" ng-repeat="teammate in champ.allyTeam">
+                    <a href="#" class="team__placeholder" ng-click="champ.choosePick('ally', $index)" popover="{{ teammate.champion }}" popover-trigger="mouseenter" popover-placement="right" popover-animation="false">
+                        <img src="{{ teammate.championImage }}" alt="{{ teammate.champion }}" class="team__image" width="50" height="50">
+                    </a>
+                    <label class="team__position">
+                        <input type="radio" name="place" ng-model="teammate.user" value="user">
+                        I'm here
+                    </label>
+                    <div class="team__role-container">
+                        <select class="team__role" ng-model="teammate.role">
+                            <option value="0">Role</option>
+                            <option value="TOP_SOLO">Top</option>
+                            <option value="JUNGLE_SOLO">Jungle</option>
+                            <option value="MIDDLE_SOLO">Mid</option>
+                            <option value="DUO_CARRY">AD Carry</option>
+                            <option value="DUO_SUPPORT">Support</option>
+                        </select>
+                    </div>
                 </li>
             </ul>
         </div>
         <div class="small-6 column">
             <div class="champ-select__picks" ng-show="champ.showPicks">
                 <h2>Champions</h2>
-                <input type="text" placeholder="Search" ng-model="championName">
+                <input type="text" placeholder="Search" ng-model="champ.championName">
                 <ul class="champ-select__picks-list">
-                    <li class="champ-select__item" ng-repeat="pick in champ.picks | filter:championName" popover="{{ pick.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
-                        <img src="{{ pick.image }}" alt="{{ pick.champion }}" class="champ-select__pick" width="50" height="50" ng-click="champ.selectChampion($index)">
+                    <li class="champ-select__item" ng-repeat="pick in champ.picks | filter:champ.championName" popover="{{ pick.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
+                        <img src="{{ pick.image }}" alt="{{ pick.champion }}" class="champ-select__pick" width="50" height="50" ng-click="champ.selectChampion(pick.id)">
                     </li>
                 </ul>
             </div>
@@ -34,8 +56,16 @@
             <h2>Bans</h2>
             <ul class="bans bans--right">
                 <li class="bans__item" ng-repeat="ban in champ.teamsBans | filter:{side: 'right'}">
-                    <a href="#" class="bans__placeholder" ng-click="champ.chooseBan('right', $index)" popover="{{ ban.champion }}" popover-trigger="mouseenter" popover-placement="left" popover-animation="false">
+                    <a href="#" class="bans__placeholder" ng-click="champ.chooseBan('right', $index)" popover="{{ ban.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
                         <img src="{{ ban.image }}" alt="{{ ban.champion }}" class="bans__image" width="50" height="50">
+                    </a>
+                </li>
+            </ul>
+            <h2>Enemy team</h2>
+            <ul class="team team--right">
+                <li class="team__item" ng-repeat="enemy in champ.enemyTeam">
+                    <a href="#" class="team__placeholder" ng-click="champ.choosePick('enemy', $index)" popover="{{ enemy.champion }}" popover-trigger="mouseenter" popover-placement="left" popover-animation="false">
+                        <img src="{{ enemy.championImage }}" alt="{{ enemy.champion }}" class="team__image" width="50" height="50">
                     </a>
                 </li>
             </ul>
