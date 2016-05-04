@@ -28,10 +28,15 @@ class FetchDataCommand extends ContainerAwareCommand
         $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         $playerRepository = $entityManager->getRepository('AppBundle:Player');
         $player = $playerRepository->findPlayerWithoutMatch($regionId);
+        $options = [
+            'rankedQueues' => ['TEAM_BUILDER_DRAFT_RANKED_5x5'],
+            'beginIndex' => 0,
+            'endIndex' => 10,
+        ];
+        $matchListApi = $this->getContainer()->get('riot.api.match_list');
         if ($player) {
 //            dump($player);
-            $matchListApi = $this->getContainer()->get('riot.api.match_list');
-            $matchListApi->getMatchListByPlayerId($regionId, $player->getSummonerId());
+            $matchListApi->getMatchListByPlayerId($regionId, $player->getSummonerId(), $options);
         }
         $matchReferenceRepository = $entityManager->getRepository('AppBundle:MatchReference');
         $matchReference = $matchReferenceRepository->getLatestEmptyReference($regionId);
@@ -41,12 +46,9 @@ class FetchDataCommand extends ContainerAwareCommand
             $matchDetail = $matchApi->getMatch($regionId, $matchReference->getMatchId());
             if ($matchDetail instanceof MatchDetail) {
 //                dump($matchDetail->getMatchId());
-                $matchListApi = $this->getContainer()->get('riot.api.match_list');
-                $options = [
-                    'rankedQueues' => ['TEAM_BUILDER_DRAFT_RANKED_5x5'],
-                    'beginIndex' => 0,
-                    'endIndex' => 10,
-                ];
+                if(!$matchListApi) {
+                    $matchListApi = $this->getContainer()->get('riot.api.match_list');
+                }
                 foreach ($matchDetail->getParticipants() as $participant) {
                     if ($player = $participant->getPlayer()) {
 //                        dump($player);

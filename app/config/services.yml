@@ -25,7 +25,7 @@ services:
     riot.api.static_data:
         class: AppBundle\Riot\StaticDataApi
         arguments:
-            - 'https://%%s.api.pvp.net/'
+            - 'https://global.api.pvp.net/'
             - '%riot.api.key%'
 
     api_request_queue_collection:

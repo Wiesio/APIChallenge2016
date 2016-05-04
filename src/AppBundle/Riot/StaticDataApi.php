@@ -39,7 +39,6 @@ class StaticDataApi
         //TODO Implement options for filtering returned data
         $url = sprintf(
             ($this->apiEndpointTemplate . '/api/lol/static-data/%s/v1.2/champion?locale=en_US&dataById=true&champData=image'),
-            $regionId,
             $regionId
         );
 
