@@ -121,6 +121,10 @@ old_sound_rabbit_mq:
             connection: default
             unserializer: json_decode
 
+        riot_api_request_na:
+            connection: default
+            unserializer: json_decode
+
     rpc_servers:
         riot_api_response_eune:
             connection: default

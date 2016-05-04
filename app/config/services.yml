@@ -16,6 +16,12 @@ services:
             - 'https://euw.api.pvp.net/'
             - '%riot.api.key%'
 
+    riot_api_response_na_server:
+        class: AppBundle\Consumer\RiotApiRequestConsumer
+        arguments:
+            - 'https://na.api.pvp.net/'
+            - '%riot.api.key%'
+
     riot.api.static_data:
         class: AppBundle\Riot\StaticDataApi
         arguments:
