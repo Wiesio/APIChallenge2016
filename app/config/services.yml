@@ -1,0 +1,60 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+
+
+services:
+    riot_api_response_eune_server:
+        class: AppBundle\Consumer\RiotApiRequestConsumer
+        arguments:
+            - 'https://eune.api.pvp.net/'
+            - '%riot.api.key%'
+
+    riot_api_response_euw_server:
+        class: AppBundle\Consumer\RiotApiRequestConsumer
+        arguments:
+            - 'https://euw.api.pvp.net/'
+            - '%riot.api.key%'
+
+    riot.api.static_data:
+        class: AppBundle\Riot\StaticDataApi
+        arguments:
+            - 'https://%%s.api.pvp.net/'
+            - '%riot.api.key%'
+
+    api_request_queue_collection:
+        class: AppBundle\Riot\ApiRequestQueueCollection
+        calls:
+            - [addRequestQueue, ['eune', '@old_sound_rabbit_mq.riot_api_request_eune_rpc', 'riot_api_response_eune']]
+            - [addRequestQueue, ['euw',  '@old_sound_rabbit_mq.riot_api_request_euw_rpc',  'riot_api_response_euw']]
+
+    riot.api.match:
+        class: AppBundle\Riot\MatchApi
+        arguments:
+            - '@api_request_queue_collection'
+            - '@doctrine.orm.entity_manager'
+
+    riot.api.summoner:
+        class: AppBundle\Riot\SummonerApi
+        arguments:
+            - '@api_request_queue_collection'
+            - '@doctrine.orm.entity_manager'
+
+    riot.api.champion:
+        class: AppBundle\Riot\ChampionApi
+        arguments:
+            - '@api_request_queue_collection'
+            - '@doctrine.orm.entity_manager'
+            - '@riot.api.static_data'
+
+    riot.api.champion_mastery:
+        class: AppBundle\Riot\ChampionMasteryApi
+        arguments:
+            - '@api_request_queue_collection'
+            - '@doctrine.orm.entity_manager'
+
+    riot.api.match_list:
+        class: AppBundle\Riot\MatchListApi
+        arguments:
+            - '@api_request_queue_collection'
+            - '@doctrine.orm.entity_manager'
