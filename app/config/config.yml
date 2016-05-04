@@ -137,3 +137,11 @@ old_sound_rabbit_mq:
             exchange_options: {name: riot_api_response_euw, type: topic}
             queue_options: {name: riot_api_response_euw_queue, durable: false, auto_delete: true}
             serializer: json_encode            
+        
+        riot_api_response_na:
+            connection: default
+            callback:   riot_api_response_na_server
+            qos_options: {prefetch_size: 0, prefetch_count: 500, global: true}
+            exchange_options: {name: riot_api_response_na, type: topic}
+            queue_options: {name: riot_api_response_na_queue, durable: false, auto_delete: true}
+            serializer: json_encode            
