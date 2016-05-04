@@ -88,7 +88,7 @@ class Team
     /**
      * @var integer Team ID
      *
-     * @ORM\Column(name="team_id", type="integer", nullable=true)
+     * @ORM\Column(name="team_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $teamId;
 

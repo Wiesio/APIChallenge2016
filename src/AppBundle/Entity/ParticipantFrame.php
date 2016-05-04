@@ -59,7 +59,7 @@ class ParticipantFrame
     /**
      * @var integer Participant ID
      *
-     * @ORM\Column(name="participant_id", type="integer", nullable=true)
+     * @ORM\Column(name="participant_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $participantId;
 

@@ -24,7 +24,7 @@ class BannedChampion
     /**
      * @var integer Banned champion ID
      *
-     * @ORM\Column(name="champion_id", type="integer", nullable=true)
+     * @ORM\Column(name="champion_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $championId;
 

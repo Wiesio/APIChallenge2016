@@ -40,7 +40,7 @@ class MatchDetail
     /**
      * @var integer ID of the match
      *
-     * @ORM\Column(name="match_id", type="integer", nullable=true)
+     * @ORM\Column(name="match_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $matchId;
 
@@ -68,7 +68,7 @@ class MatchDetail
     /**
      * @var string Platform ID of the match
      *
-     * @ORM\Column(name="platform_id", type="string", nullable=true)
+     * @ORM\Column(name="platform_id", type="string", nullable=true, options={"unsigned"=true})
      */
     protected $platformId;
 

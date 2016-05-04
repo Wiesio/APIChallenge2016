@@ -24,7 +24,7 @@ class MatchReference
     /**
      * @var integer ID of the match
      *
-     * @ORM\Column(name="match_id", type="integer", nullable=true)
+     * @ORM\Column(name="match_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $matchId;
 

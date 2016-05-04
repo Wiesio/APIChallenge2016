@@ -25,7 +25,7 @@ class Participant
     /**
      * @var int Champion ID
      *
-     * @ORM\Column(name="champion_id", type="integer", nullable=true)
+     * @ORM\Column(name="champion_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $championId;
 
@@ -39,28 +39,28 @@ class Participant
     /**
      * @var int Participant ID
      *
-     * @ORM\Column(name="participant_id", type="integer", nullable=true)
+     * @ORM\Column(name="participant_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $participantId;
 
     /**
      * @var int First summoner spell ID
      *
-     * @ORM\Column(name="spell_1_id", type="integer", nullable=true)
+     * @ORM\Column(name="spell_1_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $spell1Id;
 
     /**
      * @var int Second summoner spell ID
      *
-     * @ORM\Column(name="spell_2_id", type="integer", nullable=true)
+     * @ORM\Column(name="spell_2_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $spell2Id;
 
     /**
      * @var int Team ID
      *
-     * @ORM\Column(name="team_id", type="integer")
+     * @ORM\Column(name="team_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $teamId;
 

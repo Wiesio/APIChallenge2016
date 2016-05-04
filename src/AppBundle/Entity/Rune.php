@@ -31,7 +31,7 @@ class Rune
     /**
      * @var integer Rune ID
      *
-     * @ORM\Column(name="rune_id", type="integer", nullable=true)
+     * @ORM\Column(name="rune_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $runeId;
 

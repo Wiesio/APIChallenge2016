@@ -45,7 +45,7 @@ class Event
     /**
      * @var integer The creator ID of the event. Only present if relevant.
      *
-     * @ORM\Column(name="creator_id", type="integer", nullable=true)
+     * @ORM\Column(name="creator_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $creatorId;
 
@@ -73,14 +73,14 @@ class Event
     /**
      * @var integer The item ID of the event. Only present if relevant.
      *
-     * @ORM\Column(name="item_id", type="integer", nullable=true)
+     * @ORM\Column(name="item_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $itemId;
 
     /**
      * @var integer The killer ID of the event. Only present if relevant. Killer ID 0 indicates a minion.
      *
-     * @ORM\Column(name="killer_id", type="integer", nullable=true)
+     * @ORM\Column(name="killer_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $killerId;
 
@@ -108,7 +108,7 @@ class Event
     /**
      * @var integer The participant ID of the event. Only present if relevant.
      *
-     * @ORM\Column(name="participant_id", type="integer", nullable=true)
+     * @ORM\Column(name="participant_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $participantId;
 
@@ -143,7 +143,7 @@ class Event
     /**
      * @var integer The team ID of the event. Only present if relevant.
      *
-     * @ORM\Column(name="team_id", type="integer", nullable=true)
+     * @ORM\Column(name="team_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $teamId;
 
@@ -164,7 +164,7 @@ class Event
     /**
      * @var integer The victim ID of the event. Only present if relevant.
      *
-     * @ORM\Column(name="victim_id", type="integer", nullable=true)
+     * @ORM\Column(name="victim_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $victimId;
 

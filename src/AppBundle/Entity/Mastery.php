@@ -24,7 +24,7 @@ class Mastery
     /**
      * @var integer Mastery ID
      *
-     * @ORM\Column(name="mastery_id", type="integer", nullable=true)
+     * @ORM\Column(name="mastery_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $masteryId;
 

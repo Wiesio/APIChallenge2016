@@ -47,7 +47,7 @@ class Player
     /**
      * @var integer Summoner ID
      *
-     * @ORM\Column(name="summoner_id", type="integer", nullable=true)
+     * @ORM\Column(name="summoner_id", type="integer", nullable=true, options={"unsigned"=true})
      */
     protected $summonerId;
 
