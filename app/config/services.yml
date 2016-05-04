@@ -33,6 +33,7 @@ services:
         calls:
             - [addRequestQueue, ['eune', '@old_sound_rabbit_mq.riot_api_request_eune_rpc', 'riot_api_response_eune']]
             - [addRequestQueue, ['euw',  '@old_sound_rabbit_mq.riot_api_request_euw_rpc',  'riot_api_response_euw']]
+            - [addRequestQueue, ['na',   '@old_sound_rabbit_mq.riot_api_request_na_rpc',   'riot_api_response_na']]
 
     riot.api.match:
         class: AppBundle\Riot\MatchApi
