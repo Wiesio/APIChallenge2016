@@ -68,7 +68,7 @@ class MatchDetail
     /**
      * @var string Platform ID of the match
      *
-     * @ORM\Column(name="platform_id", type="string", nullable=true, options={"unsigned"=true})
+     * @ORM\Column(name="platform_id", type="string", nullable=true)
      */
     protected $platformId;
 

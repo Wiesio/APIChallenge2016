@@ -91,7 +91,7 @@ class Player
     /**
      * @var Collection|MatchReference[] Match Reference information
      *
-     * @ORM\OneToMany(targetEntity="MatchReference", mappedBy="matchDetail", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="MatchReference", mappedBy="player", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $matchReferences;
