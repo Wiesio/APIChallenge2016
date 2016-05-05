@@ -33,19 +33,6 @@ class SummonersByNamesCommand extends ContainerAwareCommand
         $names = $input->getArgument('names');
         $names = explode(',', $names);
 
-        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $playerRepository = $entityManager->getRepository('AppBundle:Player');
-        $foundPlayers = $playerRepository->findBy([
-            'region' => $regionId,
-            'summonerName' => $names,
-        ]);
-
-        foreach ($foundPlayers as $player) {
-            if (($idx = array_search($player->getSummonerName(), $names)) !== false) {
-                unset($names[$idx]);
-            }
-        }
-
         $summonerApi = $this->getContainer()->get('riot.api.summoner');
         $players = $summonerApi->getSummonersByNames($regionId, $names);
         if (!is_array($players)) {

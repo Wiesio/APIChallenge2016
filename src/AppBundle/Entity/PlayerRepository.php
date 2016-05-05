@@ -21,13 +21,15 @@ class PlayerRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('player');
         $queryBuilder->leftJoin('player.matchReferences', 'matchReference')
-            ->where('matchReference.id IS NULL')
             ->andWhere('player.region = :region')
             ->setParameter('region', $regionId)
+            ->groupBy('player.id')
+            ->having('COUNT(matchReference.id) = 0')
             ->orderBy('player.summonerLevel', 'DESC')
             ->addOrderBy('player.revisionDate', 'DESC')
             ->setMaxResults(1);
         $query = $queryBuilder->getQuery();
+        dump($query->getSQL());
 
         return $query->getOneOrNullResult();
     }
