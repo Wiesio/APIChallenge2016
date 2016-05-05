@@ -28,8 +28,8 @@ class RiotApiRequestConsumer implements ConsumerInterface
      * @var array
      */
     private $apiRateLimits = [
-        10 => 10.0, // 10 requests per 10 seconds
         500 => 600.0, // 500 requests per 10 minutes
+        10 => 10.0, // 10 requests per 10 seconds
     ];
 
     /**
@@ -80,10 +80,7 @@ class RiotApiRequestConsumer implements ConsumerInterface
         foreach ($this->apiRateLimits as $requests => &$seconds) {
             if ($this->requestTimestampsLength >= $requests) {
                 $timestamp = $this->requestTimestamps[$arrayEnd - $requests];
-                $sleepTimestamp = $seconds + $timestamp;
-                if ($sleepTimestamp > $now) {
-                    break;
-                }
+                $sleepTimestamp = max($seconds + $timestamp, $sleepTimestamp);
             } else {
                 break;
             }
