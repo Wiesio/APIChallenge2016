@@ -23,13 +23,6 @@ class Participant
     protected $id;
 
     /**
-     * @var int Champion ID
-     *
-     * @ORM\Column(name="champion_id", type="integer", nullable=true, options={"unsigned"=true})
-     */
-    protected $championId;
-
-    /**
      * @var string Highest ranked tier achieved for the previous season, if any, otherwise null. Used to display border in game loading screen. (Legal values: CHALLENGER, MASTER, DIAMOND, PLATINUM, GOLD, SILVER, BRONZE, UNRANKED)
      *
      * @ORM\Column(name="highest_achieved_season_tier", type="enum_season_tier", nullable=true)
@@ -104,6 +97,13 @@ class Participant
     protected $player;
 
     /**
+     * @var Champion Champion used
+     *
+     * @ORM\ManyToOne(targetEntity="Champion", inversedBy="participants", cascade={"persist"})
+     */
+    protected $champion;
+
+    /**
      * @var ArrayCollection[Rune] List of rune information
      *
      * @ORM\OneToMany(targetEntity="Rune", mappedBy="participant", cascade={"persist"})
@@ -128,29 +128,6 @@ class Participant
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get championId
-     *
-     * @return integer
-     */
-    public function getChampionId()
-    {
-        return $this->championId;
-    }
-
-    /**
-     * Set championId
-     *
-     * @param integer $championId
-     * @return Participant
-     */
-    public function setChampionId($championId)
-    {
-        $this->championId = $championId;
-
-        return $this;
     }
 
     /**
@@ -407,6 +384,29 @@ class Participant
         return $this;
     }
 
+    /**
+     * Get champion
+     *
+     * @return Champion
+     */
+    public function getChampion()
+    {
+        return $this->champion;
+    }
+
+    /**
+     * Set champion
+     *
+     * @param Champion $champion
+     * @return Participant
+     */
+    public function setChampion(Champion $champion = null)
+    {
+        $this->champion = $champion;
+
+        return $this;
+    }
+    
     /**
      * Add runes
      *

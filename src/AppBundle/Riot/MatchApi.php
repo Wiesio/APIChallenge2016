@@ -69,6 +69,11 @@ class MatchApi
             return $response;
         }
 
+        $champions = [];
+        $championRepository = $this->entityManager->getRepository('AppBundle:Champion');
+        foreach ($championRepository->findBy(['region' => $regionId]) as $champion) {
+            $champions[$champion->getChampionId()] = $champion;
+        }
         $matchDetail = new MatchDetail();
         $matchDetail->setMatchId($matchId)
             ->setRegion($regionId);
@@ -93,7 +98,8 @@ class MatchApi
             foreach ($matchDetailsJsonObj->participants as $participantJsonObj) {
                 $participant = new Participant();
                 $participant
-                    ->setChampionId(isset($participantJsonObj->championId) ? $participantJsonObj->championId : null)
+                    ->setChampion((isset($participantJsonObj->championId) && array_key_exists($participantJsonObj->championId, $champions))
+                        ? $champions[$participantJsonObj->championId] : null)
                     ->setHighestAchievedSeasonTier(isset($participantJsonObj->highestAchievedSeasonTier)
                         ? $participantJsonObj->highestAchievedSeasonTier : null)
                     ->setParticipantId(isset($participantJsonObj->participantId)
@@ -228,8 +234,9 @@ class MatchApi
                 if (isset($teamJsonObj->bans) && is_array($teamJsonObj->bans)) {
                     foreach ($teamJsonObj->bans as $bannedChampionJsonObj) {
                         $bannedChampion = new BannedChampion();
-                        $bannedChampion->setChampionId(isset($bannedChampionJsonObj->championId)
-                            ? $bannedChampionJsonObj->championId : null)
+                        $bannedChampion->setChampion((isset($bannedChampionJsonObj->championId)
+                            && array_key_exists($bannedChampionJsonObj->championId, $champions))
+                            ? $champions[$bannedChampionJsonObj->championId] : null)
                             ->setPickTurn(isset($bannedChampionJsonObj->pickTurn)
                                 ? $bannedChampionJsonObj->pickTurn : null);
                         $team->addBannedChampion($bannedChampion);

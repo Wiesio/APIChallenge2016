@@ -12,4 +12,29 @@ use Doctrine\ORM\EntityRepository;
  */
 class ChampionRepository extends EntityRepository
 {
+    /**
+     * @param \DateTime|null $from
+     * @param int $limit
+     * @return Champion[]
+     */
+    public function getMostPopularBans(\DateTime $from = null, $limit = 10) {
+        if(!$from) {
+            $from = new \DateTime();
+            $from->sub(new \DateInterval('P7D'));
+        }
+
+        $queryBuilder = $this->createQueryBuilder('champion');
+        $queryBuilder->select('champion, COUNT(bannedChampion.id) AS HIDDEN banCount')
+            ->join('champion.bannedChampions', 'bannedChampion')
+            ->leftJoin('bannedChampion.team', 'team')
+            ->leftJoin('team.matchDetail', 'matchDetail')
+            ->where('matchDetail.matchCreation >= :from')
+            ->setParameter('from', $from)
+            ->groupBy('champion.key')
+            ->orderBy('banCount', 'DESC')
+            ->setMaxResults($limit);
+        $query = $queryBuilder->getQuery();
+
+        return $query->getResult();
+    }
 }

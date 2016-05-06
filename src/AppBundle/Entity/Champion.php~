@@ -125,12 +125,12 @@ class Champion
     protected $participants;
 
     /**
-     * @var Collection|BannedChampion[] Champion Ban information
+     * @var Collection|ChampionBan[] Champion Ban information
      *
-     * @ORM\OneToMany(targetEntity="BannedChampion", mappedBy="champion", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ChampionBan", mappedBy="champion", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    protected $bannedChampions;
+    protected $championBans;
 
 
     /**
@@ -140,7 +140,7 @@ class Champion
     {
         $this->championMasteries = new ArrayCollection();
         $this->participants = new ArrayCollection();
-        $this->bannedChampions = new ArrayCollection();
+        $this->championBans = new ArrayCollection();
     }
     
     /**
@@ -485,73 +485,5 @@ class Champion
     public function getImage()
     {
         return $this->image;
-    }
-
-    /**
-     * Add participant
-     *
-     * @param \AppBundle\Entity\Participant $participant
-     *
-     * @return Champion
-     */
-    public function addParticipant(\AppBundle\Entity\Participant $participant)
-    {
-        $this->participants[] = $participant;
-
-        return $this;
-    }
-
-    /**
-     * Remove participant
-     *
-     * @param \AppBundle\Entity\Participant $participant
-     */
-    public function removeParticipant(\AppBundle\Entity\Participant $participant)
-    {
-        $this->participants->removeElement($participant);
-    }
-
-    /**
-     * Get participants
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getParticipants()
-    {
-        return $this->participants;
-    }
-
-    /**
-     * Add bannedChampion
-     *
-     * @param \AppBundle\Entity\BannedChampion $bannedChampion
-     *
-     * @return Champion
-     */
-    public function addBannedChampion(\AppBundle\Entity\BannedChampion $bannedChampion)
-    {
-        $this->bannedChampions[] = $bannedChampion;
-
-        return $this;
-    }
-
-    /**
-     * Remove bannedChampion
-     *
-     * @param \AppBundle\Entity\BannedChampion $bannedChampion
-     */
-    public function removeBannedChampion(\AppBundle\Entity\BannedChampion $bannedChampion)
-    {
-        $this->bannedChampions->removeElement($bannedChampion);
-    }
-
-    /**
-     * Get bannedChampions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getBannedChampions()
-    {
-        return $this->bannedChampions;
     }
 }

@@ -22,13 +22,6 @@ class BannedChampion
     protected $id;
 
     /**
-     * @var integer Banned champion ID
-     *
-     * @ORM\Column(name="champion_id", type="integer", nullable=true, options={"unsigned"=true})
-     */
-    protected $championId;
-
-    /**
      * @var integer Turn during which the champion was banned
      *
      * @ORM\Column(name="pick_turn", type="integer", nullable=true)
@@ -44,6 +37,14 @@ class BannedChampion
     protected $team;
 
     /**
+     * @var Champion Champion information
+     *
+     * @ORM\ManyToOne(targetEntity="Champion", inversedBy="bannedChampions", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    protected $champion;
+
+    /**
      * Get id
      *
      * @return integer
@@ -51,29 +52,6 @@ class BannedChampion
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get championId
-     *
-     * @return integer
-     */
-    public function getChampionId()
-    {
-        return $this->championId;
-    }
-
-    /**
-     * Set championId
-     *
-     * @param integer $championId
-     * @return BannedChampion
-     */
-    public function setChampionId($championId)
-    {
-        $this->championId = $championId;
-
-        return $this;
     }
 
     /**
@@ -118,6 +96,29 @@ class BannedChampion
     public function setTeam(Team $team = null)
     {
         $this->team = $team;
+
+        return $this;
+    }
+
+    /**
+     * Get champion
+     *
+     * @return Champion
+     */
+    public function getChampion()
+    {
+        return $this->champion;
+    }
+
+    /**
+     * Set champion
+     *
+     * @param Champion $champion
+     * @return BannedChampion
+     */
+    public function setChampion(Champion $champion = null)
+    {
+        $this->champion = $champion;
 
         return $this;
     }

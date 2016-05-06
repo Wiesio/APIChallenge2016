@@ -28,8 +28,8 @@ class RiotApiRequestConsumer implements ConsumerInterface
      * @var array
      */
     private $apiRateLimits = [
-        500 => 600.0, // 500 requests per 10 minutes
         10 => 10.0, // 10 requests per 10 seconds
+        500 => 600.0, // 500 requests per 10 minutes
     ];
 
     /**
