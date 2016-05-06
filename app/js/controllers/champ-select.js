@@ -10,20 +10,31 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
     let teamPick = null;
     vm.bans = {};
     vm.userPicks = [];
+    vm.alerts = [];
 
     API.getUserPicks({
         id: UserDataService.getUserId(),
         region: UserDataService.getUserRegion()
     }).success((data) => {
         vm.userPicks = data;
-    }).error(() => {
-        console.log('error');
+        vm.alerts = [];
+    }).error((data) => {
+        if (typeof data === 'object') {
+            vm.alerts = [{ type: 'alert', msg: data.error }];
+        } else {
+            vm.alerts = [{ type: 'alert', msg: 'Sorry, there was an error.' }];
+        }
     });
     
     API.getSuggestedBans().success((data) => {
         vm.bans = data;
-    }).error(() => {
-        console.log('error')
+        vm.alerts = [];
+    }).error((data) => {
+        if (typeof data === 'object') {
+            vm.alerts = [{ type: 'alert', msg: data.error }];
+        } else {
+            vm.alerts = [{ type: 'alert', msg: 'Sorry, there was an error.' }];
+        }
     });
 
     vm.teamsBans = new Array(6);
@@ -58,8 +69,13 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
             bans: vm.teamsBans
         }).success((data) => {
             vm.picks = data;
-        }).error(() => {
-            console.log('error');
+            vm.alerts = [];
+        }).error((data) => {
+            if (typeof data === 'object') {
+                vm.alerts = [{ type: 'alert', msg: data.error }];
+            } else {
+                vm.alerts = [{ type: 'alert', msg: 'Sorry, there was an error.' }];
+            }
         });
         
         if (side === 'right') {
@@ -89,8 +105,13 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
             enemyPicks: vm.enemyTeam
         }).success((data) => {
             vm.picks = data;
-        }).error(() => {
-            console.log('error');
+            vm.alerts = [];
+        }).error((data) => {
+            if (typeof data === 'object') {
+                vm.alerts = [{ type: 'alert', msg: data.error }];
+            } else {
+                vm.alerts = [{ type: 'alert', msg: 'Sorry, there was an error.' }];
+            }
         });
 
         teamPick = side;
