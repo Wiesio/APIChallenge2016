@@ -5,12 +5,17 @@ function HomeCtrl($stateProvider, UserDataService, API) {
 
   vm.form = {};
   vm.regions = [];
+  vm.alerts = [];
 
   API.getRegions().success((data) => {
     vm.regions = data;
     vm.form.region = String(vm.regions[0].id);
-  }).error(() => {
-    console.log('error');
+  }).error((data) => {
+    if (typeof data === 'object') {
+      vm.alerts = [{ type: 'alert', msg: data.error }];
+    } else {
+      vm.alerts = [{ type: 'alert', msg: 'Sorry, there was an error.' }];
+    }
   });
 
   vm.form.name = '';
@@ -24,8 +29,12 @@ function HomeCtrl($stateProvider, UserDataService, API) {
       UserDataService.setUserRegion(data.region);
 
       $stateProvider.go('ChampSelect');
-    }).error(() => {
-      console.log('error');
+    }).error((data) => {
+      if (typeof data === 'object') {
+        vm.alerts = [{ type: 'alert', msg: data.error }];
+      } else {
+        vm.alerts = [{ type: 'alert', msg: 'Sorry, there was an error.' }];
+      }
     });
   }
 }

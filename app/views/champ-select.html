@@ -1,4 +1,7 @@
 <div class="row text-center">
+    <div class="row">
+        <alert ng-repeat="alert in champ.alerts" type="alert.type">{{alert.msg}}</alert>
+    </div>
     <h2>Your most played champions</h2>
     <ul class="bans bans--center">
         <li class="bans__item" ng-repeat="pick in champ.userPicks" popover="{{ pick.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
