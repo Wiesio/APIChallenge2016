@@ -4,18 +4,15 @@ function HomeCtrl($stateProvider, UserDataService, API) {
   const vm = this;
 
   vm.form = {};
-  vm.regions = [
-    {
-      id: 1,
-      name: 'EUNE'
-    },
-    {
-      id: 2,
-      name: 'EUW'
-    }
-  ];
+  vm.regions = [];
 
-  vm.form.region = String(vm.regions[0].id);
+  API.getRegions().success((data) => {
+    vm.regions = data;
+    vm.form.region = String(vm.regions[0].id);
+  }).error(() => {
+    console.log('error');
+  });
+
   vm.form.name = '';
 
   vm.searchSummoner = function(form) {
