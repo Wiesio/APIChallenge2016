@@ -128,10 +128,9 @@ class ApiController extends Controller
     /**
      * @Method("GET")
      * @Route("/getSuggestedBans.json", name="api_get_suggested_bans")
-     * @param Request $request
      * @return JsonResponse
      */
-    public function getSuggestedBansAction(Request $request)
+    public function getSuggestedBansAction()
     {
         $championRepository = $this->getDoctrine()->getRepository('AppBundle:Champion');
         $bans = $championRepository->getMostPopularBans();
@@ -144,9 +143,7 @@ class ApiController extends Controller
                 'image' => $ban->getImage(),
             ];
         }
-        dump($bans);
-        return new Response($response);
 
-        //return new JsonResponse($response);
+        return new JsonResponse($response);
     }
 }
