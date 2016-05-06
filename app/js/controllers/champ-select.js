@@ -54,13 +54,15 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
             user: false,
             role: '0',
             champion: null,
-            championImage: null
+            title: null,
+            image: null
         }
     }
     for(let i = 0; i < vm.enemyTeam.length; i++) {
         vm.enemyTeam[i] = {
             champion: null,
-            championImage: null
+            title: null,
+            image: null
         }
     }
 
@@ -133,10 +135,12 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
         if (lastPickPosition !== null) {
             if (teamPick === 'ally') {
                 vm.allyTeam[lastPickPosition].champion = champion.champion;
-                vm.allyTeam[lastPickPosition].championImage = champion.image;
+                vm.allyTeam[lastPickPosition].title = champion.title;
+                vm.allyTeam[lastPickPosition].image = champion.image;
             } else if (teamPick === 'enemy') {
                 vm.enemyTeam[lastPickPosition].champion = champion.champion;
-                vm.enemyTeam[lastPickPosition].championImage = champion.image;
+                vm.enemyTeam[lastPickPosition].title = champion.title;
+                vm.enemyTeam[lastPickPosition].image = champion.image;
             }
         }
 
