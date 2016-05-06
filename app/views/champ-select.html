@@ -4,14 +4,14 @@
     </div>
     <h2>Your most played champions</h2>
     <ul class="bans bans--center">
-        <li class="bans__item" ng-repeat="pick in champ.userPicks" popover="{{ pick.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
-            <img src="{{ pick.image }}" alt="{{ pick.champion }}" class="bans__image" width="50" height="50">
+        <li class="bans__item" ng-repeat="pick in champ.userPicks" popover="{{ pick.title }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
+            <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ pick.image.full }}" alt="{{ pick.champion }}" class="bans__image" width="50" height="50">
         </li>
     </ul>
     <h2>Suggested Bans</h2>
     <ul class="bans bans--center">
-        <li class="bans__item" ng-repeat="ban in champ.bans" popover="{{ ban.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
-            <img src="{{ ban.image }}" alt="{{ ban.champion }}" class="bans__image" width="50" height="50">
+        <li class="bans__item" ng-repeat="ban in champ.bans" popover="{{ ban.title }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
+            <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ ban.image.full }}" alt="{{ ban.champion }}" class="bans__image" width="50" height="50">
         </li>
     </ul>
 </div>
@@ -22,16 +22,16 @@
             <h2>Bans</h2>
             <ul class="bans">
                 <li class="bans__item" ng-repeat="ban in champ.teamsBans | filter:{side: 'left'}">
-                    <a href="#" class="bans__placeholder" ng-click="champ.chooseBan('left', $index)" popover="{{ ban.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
-                        <img src="{{ ban.image }}" alt="{{ ban.champion }}" class="bans__image" width="50" height="50">
+                    <a href="#" class="bans__placeholder" ng-click="champ.chooseBan('left', $index)" popover="{{ ban.title }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
+                        <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ ban.image.full }}" alt="{{ ban.champion }}" class="bans__image" width="50" height="50">
                     </a>
                 </li>
             </ul>
             <h2>Your team</h2>
             <ul class="team">
                 <li class="team__item" ng-repeat="teammate in champ.allyTeam">
-                    <a href="#" class="team__placeholder" ng-click="champ.choosePick('ally', $index)" popover="{{ teammate.champion }}" popover-trigger="mouseenter" popover-placement="right" popover-animation="false">
-                        <img src="{{ teammate.championImage }}" alt="{{ teammate.champion }}" class="team__image" width="50" height="50">
+                    <a href="#" class="team__placeholder" ng-click="champ.choosePick('ally', $index)" popover="{{ teammate.title }}" popover-trigger="mouseenter" popover-placement="right" popover-animation="false">
+                        <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ teammate.image.full }}" alt="{{ teammate.champion }}" class="team__image" width="50" height="50">
                     </a>
                     <label class="team__position">
                         <input type="radio" name="place" ng-model="teammate.user" value="user">
@@ -55,8 +55,8 @@
                 <h2>Champions</h2>
                 <input type="text" placeholder="Search" ng-model="champ.championName">
                 <ul class="champ-select__picks-list">
-                    <li class="champ-select__item" ng-repeat="pick in champ.picks | filter:champ.championName" popover="{{ pick.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
-                        <img src="{{ pick.image }}" alt="{{ pick.champion }}" class="champ-select__pick" width="50" height="50" ng-click="champ.selectChampion(pick.id)">
+                    <li class="champ-select__item" ng-repeat="pick in champ.picks | filter:champ.championName" popover="{{ pick.title }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
+                        <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ pick.image.full }}" alt="{{ pick.champion }}" class="champ-select__pick" width="50" height="50" ng-click="champ.selectChampion(pick.id)">
                     </li>
                 </ul>
             </div>
@@ -65,16 +65,16 @@
             <h2>Bans</h2>
             <ul class="bans bans--right">
                 <li class="bans__item" ng-repeat="ban in champ.teamsBans | filter:{side: 'right'}">
-                    <a href="#" class="bans__placeholder" ng-click="champ.chooseBan('right', $index)" popover="{{ ban.champion }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
-                        <img src="{{ ban.image }}" alt="{{ ban.champion }}" class="bans__image" width="50" height="50">
+                    <a href="#" class="bans__placeholder" ng-click="champ.chooseBan('right', $index)" popover="{{ ban.title }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
+                        <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ ban.image.full }}" alt="{{ ban.champion }}" class="bans__image" width="50" height="50">
                     </a>
                 </li>
             </ul>
             <h2>Enemy team</h2>
             <ul class="team team--right">
                 <li class="team__item" ng-repeat="enemy in champ.enemyTeam">
-                    <a href="#" class="team__placeholder" ng-click="champ.choosePick('enemy', $index)" popover="{{ enemy.champion }}" popover-trigger="mouseenter" popover-placement="left" popover-animation="false">
-                        <img src="{{ enemy.championImage }}" alt="{{ enemy.champion }}" class="team__image" width="50" height="50">
+                    <a href="#" class="team__placeholder" ng-click="champ.choosePick('enemy', $index)" popover="{{ enemy.title }}" popover-trigger="mouseenter" popover-placement="left" popover-animation="false">
+                        <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ enemy.image.full }}" alt="{{ enemy.champion }}" class="team__image" width="50" height="50">
                     </a>
                 </li>
             </ul>
