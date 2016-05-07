@@ -9,6 +9,13 @@ body {
   padding: $half-space;
 }
 
+.joyride-tip-guide {
+  width: auto;
+  p {
+    margin: 0;
+  }
+}
+
 @import 'components/bans';
 @import 'components/champ-select';
 @import 'components/team';
