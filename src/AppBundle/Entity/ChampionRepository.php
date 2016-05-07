@@ -37,4 +37,24 @@ class ChampionRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * @param string $region
+     * @param array $banIds
+     * @return Champion[]
+     */
+    public function getExcept($region, $banIds) {
+        $queryBuilder = $this->createQueryBuilder('champion');
+        $queryBuilder->select('champion')
+            ->where('champion.region = :region')
+            ->setParameter('region', $region)
+            ->orderBy('champion.name', 'ASC');
+        if($banIds) {
+            $queryBuilder->andWhere('champion.id NOT IN (:banIds)')
+                ->setParameter('banIds', $banIds);
+        }
+        $query = $queryBuilder->getQuery();
+
+        return $query->getResult();
+    }
 }

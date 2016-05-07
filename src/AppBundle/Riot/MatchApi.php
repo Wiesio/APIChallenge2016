@@ -106,7 +106,7 @@ class MatchApi
                         ? $participantJsonObj->participantId : null)
                     ->setSpell1Id(isset($participantJsonObj->spell1Id) ? $participantJsonObj->spell1Id : null)
                     ->setSpell2Id(isset($participantJsonObj->spell2Id) ? $participantJsonObj->spell2Id : null)
-                    ->setTeamId(isset($participantJsonObj->teamId) ? $participantJsonObj->spell2Id : null);
+                    ->setTeamId(isset($participantJsonObj->teamId) ? $participantJsonObj->teamId : null);
 
                 if (isset($participantJsonObj->masteries) && is_array($participantJsonObj->masteries)) {
                     foreach ($participantJsonObj->masteries as $masteryJsonObj) {

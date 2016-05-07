@@ -68,7 +68,7 @@ class ApiController extends Controller
         $statusCode = 200;
         if($player) {
             $response = [
-                'user' => $player->getSummonerId(),
+                'user' => $player->getId(),
                 'region' => $player->getRegion()
             ];
         } else {
@@ -93,17 +93,9 @@ class ApiController extends Controller
         $player = null;
         /** @var ChampionMastery[] $championMasteries */
         $championMasteries = [];
-        if(property_exists($data, 'id') && property_exists($data, 'region')) {
+        if(property_exists($data, 'id')) {
             $playerRepository = $this->getDoctrine()->getRepository('AppBundle:Player');
-            $player = $playerRepository->findOneBy(['summonerId' => $data->id, 'region' => $data->region]);
-            if(!$player) {
-                $summonerApi = $this->get('riot.api.summoner');
-                $players = $summonerApi->getSummonersByIds($data->region, [$data->id]);
-                if(is_array($players)) {
-                    /** @var Player $player */
-                    $player = current($players);
-                }
-            }
+            $player = $playerRepository->find($data->id);
             if($player) {
                 $championMasteryApi = $this->get('riot.api.champion_mastery');
                 $championMasteries =
@@ -115,7 +107,7 @@ class ApiController extends Controller
         for($i = 0; $i < $count; $i++) {
             $champion = $championMasteries[$i]->getChampion();
             $response[] = [
-                'id' => $champion->getChampionId(),
+                'id' => $champion->getId(),
                 'champion' => $champion->getName(),
                 'title' => $champion->getTitle(),
                 'image' => $champion->getImage(),
@@ -126,22 +118,67 @@ class ApiController extends Controller
     }
 
     /**
-     * @Method("GET")
+     * @Method("POST")
      * @Route("/getSuggestedBans.json", name="api_get_suggested_bans")
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getSuggestedBansAction()
+    public function getSuggestedBansAction(Request $request)
     {
-        $championRepository = $this->getDoctrine()->getRepository('AppBundle:Champion');
-        $bans = $championRepository->getMostPopularBans();
+        $data = json_decode($request->getContent());
         $response = [];
-        foreach($bans as $ban) {
-            $response[] = [
-                'id' => $ban->getChampionId(),
-                'champion' => $ban->getName(),
-                'title' => $ban->getTitle(),
-                'image' => $ban->getImage(),
-            ];
+        if(property_exists($data, 'region')) {
+            $championRepository = $this->getDoctrine()->getRepository('AppBundle:Champion');
+            $bans = [];
+            foreach ($championRepository->getMostPopularBans() as $ban) {
+                $bans[$ban->getKey()] = $ban;
+            }
+            $regionalBans = [];
+            foreach ($championRepository->findBy(['key' => array_keys($bans), 'region' => $data->region])
+                     as $regionalBan){
+                $regionalBans[$regionalBan->getKey()] = $regionalBan;
+            }
+            foreach (array_keys($bans) as $key) {
+                $ban = $regionalBans[$key];
+                $response[] = [
+                    'id' => $ban->getId(),
+                    'champion' => $ban->getName(),
+                    'title' => $ban->getTitle(),
+                    'image' => $ban->getImage(),
+                ];
+            }
+        }
+
+        return new JsonResponse($response);
+    }
+
+    /**
+     * @Method("POST")
+     * @Route("/getBanList.json", name="api_get_ban_list")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getBanListAction(Request $request)
+    {
+        $data = json_decode($request->getContent());
+        $response = [];
+        if(property_exists($data, 'bans') && property_exists($data, 'user') && property_exists($data->user, 'region')) {
+            $banIds = [];
+            foreach($data->bans as $ban) {
+                if(property_exists($ban, 'champion') && property_exists($ban->champion, 'id')) {
+                    $banIds[] = $ban->champion->id;
+                }
+            }
+            $championRepository = $this->getDoctrine()->getRepository('AppBundle:Champion');
+            $bans = $championRepository->getExcept($data->user->region, $banIds);
+            foreach ($bans as $ban) {
+                $response[] = [
+                    'id' => $ban->getChampionId(),
+                    'champion' => $ban->getName(),
+                    'title' => $ban->getName() . ', ' . $ban->getTitle(),
+                    'image' => $ban->getImage(),
+                ];
+            }
         }
 
         return new JsonResponse($response);
