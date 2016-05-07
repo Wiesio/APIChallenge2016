@@ -13,8 +13,8 @@ function API($http) {
     return $http.post(apiPath + 'getUser.json', userData);
   };
   // Get most popular bans
-  service.getSuggestedBans = function() {
-    return $http.get(apiPath + 'getBans.json');
+  service.getSuggestedBans = function(data) {
+    return $http.post(apiPath + 'getBans.json', data);
   };
   // Get champions for ban
   service.getBansList = function(data) {

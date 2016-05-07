@@ -26,7 +26,10 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
         }
     });
     
-    API.getSuggestedBans().success((data) => {
+    API.getSuggestedBans({
+        id: UserDataService.getUserId(),
+        region: UserDataService.getUserRegion()
+    }).success((data) => {
         vm.bans = data;
         vm.alerts = [];
     }).error((data) => {
@@ -68,6 +71,10 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
 
     vm.chooseBan = function(side, position) {
         API.getBansList({
+            user: {
+                id: UserDataService.getUserId(),
+                region: UserDataService.getUserRegion()
+            },
             bans: vm.teamsBans
         }).success((data) => {
             vm.picks = data;
@@ -101,6 +108,7 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
         }
 
         API.getPicksList({
+            region: UserDataService.getUserRegion(),
             user: userPick,
             bans: vm.teamsBans,
             allyPicks: vm.allyTeam,
