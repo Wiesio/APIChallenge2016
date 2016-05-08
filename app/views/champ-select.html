@@ -55,7 +55,7 @@
                 <h2>Champions</h2>
                 <input type="text" placeholder="Search" ng-model="champ.championName">
                 <ul class="champ-select__picks-list">
-                    <li class="champ-select__item" ng-repeat="pick in champ.picks | filter:champ.championName" popover="{{ pick.title }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
+                    <li class="champ-select__item" ng-repeat="pick in champ.picks | filter:{champion: champ.championName}" popover="{{ pick.title }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
                         <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ pick.image.full }}" alt="{{ pick.champion }}" class="champ-select__pick" width="50" height="50" ng-click="champ.selectChampion(pick.id)">
                     </li>
                 </ul>
