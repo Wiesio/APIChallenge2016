@@ -9,7 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Player
  *
- * @ORM\Table
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="summonerid_region_idx", columns={"summoner_id", "region"}),
+ *     @ORM\Index(name="summonername_region_idx", columns={"summoner_name", "region"}),
+ *     @ORM\Index(name="summonerlevel_revisiondate_region_idx", columns={"summoner_level", "revision_date", "region"})
+ * })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\PlayerRepository")
  */
 class Player
@@ -305,7 +309,7 @@ class Player
     /**
      * Get participants
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection|Participant[]
      */
     public function getParticipants()
     {
@@ -341,7 +345,7 @@ class Player
     /**
      * Get championMasteries
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection|ChampionMastery[]
      */
     public function getChampionMasteries()
     {
@@ -377,7 +381,7 @@ class Player
     /**
      * Get matchReferences
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection|MatchReference[]
      */
     public function getMatchReferences()
     {

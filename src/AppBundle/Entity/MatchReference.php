@@ -7,7 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * MatchReference
  *
- * @ORM\Table
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="matchfinish_region_idx", columns={"match_finish", "region"}),
+ *     @ORM\Index(name="match_id_region_idx", columns={"match_id", "region"}),
+ * })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\MatchReferenceRepository")
  */
 class MatchReference

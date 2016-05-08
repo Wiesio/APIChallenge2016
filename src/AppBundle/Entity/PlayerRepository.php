@@ -29,7 +29,6 @@ class PlayerRepository extends EntityRepository
             ->addOrderBy('player.revisionDate', 'DESC')
             ->setMaxResults(1);
         $query = $queryBuilder->getQuery();
-        dump($query->getSQL());
 
         return $query->getOneOrNullResult();
     }

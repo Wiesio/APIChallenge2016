@@ -34,4 +34,47 @@ class MatchDetailRepository extends EntityRepository
 
         return $query->getOneOrNullResult();
     }
+
+
+    /**
+     * @param string $firstPlayerKey
+     * @param string $secondPlayerKey
+     * @param $isSecondPlayerAlly
+     * @param string $outcome
+     * @param \DateTime $from
+     * @return Champion[]
+     */
+    public function getMatchStatistics($firstPlayerKey, $secondPlayerKey, $isSecondPlayerAlly, $outcome, \DateTime $from = null)
+    {
+        if (!$from) {
+            $from = new \DateTime();
+            $from->sub(new \DateInterval('P7D'));
+            $from->setTime(0, 0, 0);
+        }
+
+        $queryBuilder = $this->createQueryBuilder('matchDetail');
+        $queryBuilder->select('COUNT(matchDetail.id)')
+            ->leftJoin('matchDetail.teams', 'team')
+            ->leftJoin('matchDetail.participants', 'firstPlayer')
+            ->leftJoin('firstPlayer.champion', 'firstPlayerChampion')
+            ->leftJoin('matchDetail.participants', 'secondPlayer')
+            ->leftJoin('secondPlayer.champion', 'secondPlayerChampion')
+            ->andWhere('team.teamId = firstPlayer.teamId')
+            ->andWhere('firstPlayerChampion.key = :firstPlayerKey')
+            ->setParameter('firstPlayerKey', $firstPlayerKey)
+            ->andWhere('secondPlayerChampion.key = :secondPlayerKey')
+            ->setParameter('secondPlayerKey', $secondPlayerKey)
+            ->andWhere('team.winner = :outcome')
+            ->setParameter('outcome', $outcome)
+            ->andWhere('matchDetail.matchCreation >= :from')
+            ->setParameter('from', $from);
+        if ($isSecondPlayerAlly) {
+            $queryBuilder->andWhere('firstPlayer.teamId = secondPlayer.teamId');
+        } else {
+            $queryBuilder->andWhere('firstPlayer.teamId != secondPlayer.teamId');
+        }
+        $query = $queryBuilder->getQuery();
+
+        return $query->getSingleScalarResult();
+    }
 }

@@ -9,7 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Champion
  *
- * @ORM\Table
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="championkey_region_idx", columns={"champion_key", "region"}),
+ *     @ORM\Index(name="name_region_idx", columns={"name", "region"}),
+ *     @ORM\Index(name="championid_region_idx", columns={"champion_id", "region"}),
+ *     @ORM\Index(name="region_idx", columns={"region"})
+ * })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ChampionRepository")
  */
 class Champion

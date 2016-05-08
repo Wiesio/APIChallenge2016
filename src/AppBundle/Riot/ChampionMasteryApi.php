@@ -92,7 +92,7 @@ class ChampionMasteryApi
         }
         $champions = [];
         $championRepository = $this->entityManager->getRepository('AppBundle:Champion');
-        foreach ($championRepository->findBy(['championId' => $championIds]) as $champion) {
+        foreach ($championRepository->findBy(['region' => $regionId, 'championId' => $championIds]) as $champion) {
             $champions[$champion->getChampionId()] = $champion;
         }
         foreach ($masteriesJsonObjects as $masteryJsonObj) {

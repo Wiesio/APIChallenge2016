@@ -9,7 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * MatchDetail
  *
- * @ORM\Table
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="matchid_region_idx", columns={"match_id", "region"}),
+ *     @ORM\Index(name="matchcreation_idx", columns={"match_creation"})
+ * })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\MatchDetailRepository")
  */
 class MatchDetail

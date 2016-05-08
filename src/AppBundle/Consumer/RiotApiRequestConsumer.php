@@ -68,7 +68,6 @@ class RiotApiRequestConsumer implements ConsumerInterface
         $this->requestTimestampsMaxAge = max($this->apiRateLimits);
         $this->curl = curl_init();
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->curl, CURLOPT_VERBOSE, true);
         curl_setopt($this->curl, CURLOPT_HEADER, true);
     }
 
