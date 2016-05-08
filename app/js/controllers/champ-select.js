@@ -70,12 +70,21 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
     }
 
     vm.chooseBan = function(side, position) {
+        let bans = [];
+
+        for(let i = 0; i < vm.teamsBans.length; i++) {
+            let ban = vm.teamsBans[i];
+            if (typeof ban.id !== 'undefined') {
+                bans.push(ban.id);
+            }
+        }
+
         API.getBansList({
             user: {
                 id: UserDataService.getUserId(),
                 region: UserDataService.getUserRegion()
             },
-            bans: vm.teamsBans
+            bans: bans
         }).success((data) => {
             vm.picks = data;
             vm.alerts = [];
@@ -97,6 +106,31 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
     };
 
     vm.choosePick = function(side, position) {
+        let bans = [];
+        let allyPicks = [];
+        let enemyPicks = [];
+
+        for(let i = 0; i < vm.teamsBans.length; i++) {
+            let ban = vm.teamsBans[i];
+            if (typeof ban.id !== 'undefined') {
+                bans.push(ban.id);
+            }
+        }
+
+        for(let i = 0; i < vm.allyTeam.length; i++) {
+            let pick = vm.allyTeam[i];
+            if (typeof pick.id !== 'undefined') {
+                allyPicks.push(pick.id);
+            }
+        }
+
+        for(let i = 0; i < vm.enemyTeam.length; i++) {
+            let pick = vm.enemyTeam[i];
+            if (typeof pick.id !== 'undefined') {
+                enemyPicks.push(pick.id);
+            }
+        }
+
         let userPick = false;
         if (side === 'ally') {
             if (vm.allyTeam[position].user === 'user') {
@@ -110,9 +144,9 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
         API.getPicksList({
             region: UserDataService.getUserRegion(),
             user: userPick,
-            bans: vm.teamsBans,
-            allyPicks: vm.allyTeam,
-            enemyPicks: vm.enemyTeam
+            bans: bans,
+            allyPicks: allyPicks,
+            enemyPicks: enemyPicks
         }).success((data) => {
             vm.picks = data;
             vm.alerts = [];
@@ -134,6 +168,7 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
         let champion = getChampion(id);
         
         if (lastBanPosition !== null) {
+            vm.teamsBans[lastBanPosition].id = champion.id;
             vm.teamsBans[lastBanPosition].champion = champion.champion;
             vm.teamsBans[lastBanPosition].image = champion.image;
 
@@ -142,10 +177,12 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
 
         if (lastPickPosition !== null) {
             if (teamPick === 'ally') {
+                vm.allyTeam[lastPickPosition].id = champion.id;
                 vm.allyTeam[lastPickPosition].champion = champion.champion;
                 vm.allyTeam[lastPickPosition].title = champion.title;
                 vm.allyTeam[lastPickPosition].image = champion.image;
             } else if (teamPick === 'enemy') {
+                vm.enemyTeam[lastPickPosition].id = champion.id;
                 vm.enemyTeam[lastPickPosition].champion = champion.champion;
                 vm.enemyTeam[lastPickPosition].title = champion.title;
                 vm.enemyTeam[lastPickPosition].image = champion.image;
