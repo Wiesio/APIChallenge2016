@@ -15,7 +15,11 @@ body {
     margin: 0;
   }
 }
-
+.section-title {
+  float: left;
+  width: 100%;
+  margin-top: 32px;
+}
 @import 'components/bans';
 @import 'components/champ-select';
 @import 'components/team';

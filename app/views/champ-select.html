@@ -2,8 +2,7 @@
     <div class="row">
         <alert ng-repeat="alert in champ.alerts" type="alert.type">{{alert.msg}}</alert>
     </div>
-    <h2>Your most played champions</h2>
-    <ul class="bans bans--center">
+    <h2>{{ champ.userPicksTitle }}</h2>
     <ul class="bans bans--center bans--big">
         <li class="bans__item" ng-repeat="pick in champ.userPicks" popover="{{ pick.title }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
             <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ pick.image.full }}" alt="{{ pick.champion }}" class="bans__image" width="50" height="50">
@@ -11,6 +10,18 @@
             <span class="bans__win-ratio" show-percents="{{ pick.winRatio }}"></span>
         </li>
     </ul>
+    <h3 class="section-title">Your role in team</h3>
+    <div class="small-12 medium-6 medium-push-3 large-4 large-push-4">
+        <select class="team__role" ng-model="champ.userRole" ng-change="champ.selectChampion()">
+            <option value="0">Role</option>
+            <option value="TOP_SOLO">Top</option>
+            <option value="JUNGLE_SOLO">Jungle</option>
+            <option value="MIDDLE_SOLO">Mid</option>
+            <option value="DUO_CARRY">AD Carry</option>
+            <option value="DUO_SUPPORT">Support</option>
+        </select>
+    </div>
+
     <h2>Suggested Bans</h2>
     <ul class="bans bans--center">
         <li class="bans__item" ng-repeat="ban in champ.bans" popover="{{ ban.title }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
@@ -21,7 +32,7 @@
 
 <div class="champ-select">
     <div class="row">
-        <div class="small-3 column">
+        <div class="small-12 large-3 column">
             <h2>Bans</h2>
             <ul class="bans">
                 <li class="bans__item" ng-repeat="ban in champ.teamsBans | filter:{side: 'left'}">
@@ -30,30 +41,16 @@
                     </a>
                 </li>
             </ul>
-            <h2>Your team</h2>
+            <h2 class="section-title">Your team</h2>
             <ul class="team">
                 <li class="team__item" ng-repeat="teammate in champ.allyTeam">
                     <a href="#" class="team__placeholder" ng-click="champ.choosePick('ally', $index)" popover="{{ teammate.title }}" popover-trigger="mouseenter" popover-placement="right" popover-animation="false">
                         <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ teammate.image.full }}" alt="{{ teammate.champion }}" class="team__image" width="50" height="50">
                     </a>
-                    <label class="team__position">
-                        <input type="radio" name="place" ng-model="teammate.user" value="user">
-                        I'm here
-                    </label>
-                    <div class="team__role-container">
-                        <select class="team__role" ng-model="teammate.role">
-                            <option value="0">Role</option>
-                            <option value="TOP_SOLO">Top</option>
-                            <option value="JUNGLE_SOLO">Jungle</option>
-                            <option value="MIDDLE_SOLO">Mid</option>
-                            <option value="DUO_CARRY">AD Carry</option>
-                            <option value="DUO_SUPPORT">Support</option>
-                        </select>
-                    </div>
                 </li>
             </ul>
         </div>
-        <div class="small-6 column">
+        <div class="small-12 large-6 column">
             <div class="champ-select__picks" ng-show="champ.showPicks">
                 <h2>Champions</h2>
                 <input type="text" placeholder="Search" ng-model="champ.championName">
@@ -64,7 +61,7 @@
                 </ul>
             </div>
         </div>
-        <div class="small-3 column text-right">
+        <div class="small-12 large-3 column text-right">
             <h2>Bans</h2>
             <ul class="bans bans--right">
                 <li class="bans__item" ng-repeat="ban in champ.teamsBans | filter:{side: 'right'}">
@@ -73,7 +70,7 @@
                     </a>
                 </li>
             </ul>
-            <h2>Enemy team</h2>
+            <h2 class="section-title">Enemy team</h2>
             <ul class="team team--right">
                 <li class="team__item" ng-repeat="enemy in champ.enemyTeam">
                     <a href="#" class="team__placeholder" ng-click="champ.choosePick('enemy', $index)" popover="{{ enemy.title }}" popover-trigger="mouseenter" popover-placement="left" popover-animation="false">
