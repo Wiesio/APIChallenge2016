@@ -4,8 +4,11 @@
     </div>
     <h2>Your most played champions</h2>
     <ul class="bans bans--center">
+    <ul class="bans bans--center bans--big">
         <li class="bans__item" ng-repeat="pick in champ.userPicks" popover="{{ pick.title }}" popover-trigger="mouseenter" popover-placement="bottom" popover-animation="false">
             <img src="http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/{{ pick.image.full }}" alt="{{ pick.champion }}" class="bans__image" width="50" height="50">
+            <span class="bans__level">{{ pick.level }}</span>
+            <span class="bans__win-ratio" show-percents="{{ pick.winRatio }}"></span>
         </li>
     </ul>
     <h2>Suggested Bans</h2>
