@@ -20,6 +20,16 @@ body {
   width: 100%;
   margin-top: 32px;
 }
+.row {
+  position: relative;
+}
+.back-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
 @import 'components/bans';
 @import 'components/champ-select';
 @import 'components/team';
