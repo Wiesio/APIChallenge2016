@@ -190,31 +190,6 @@ class ApiController extends Controller
                     'level' => $level,
                 ];
             }
-//            $data = json_decode($request->getContent());
-//            $player = null;
-//            /** @var ChampionMastery[] $championMasteries */
-//            $championMasteries = [];
-//            if (property_exists($data, 'id')) {
-//                $playerRepository = $this->getDoctrine()->getRepository('AppBundle:Player');
-//                $player = $playerRepository->find($data->id);
-//                if ($player) {
-//                    $championMasteryApi = $this->get('riot.api.champion_mastery');
-//                    $championMasteries =
-//                        $championMasteryApi->getMasteriesByPlayerId($player->getRegion(), $player->getSummonerId());
-//                }
-//            }
-//            $response = [];
-//            $count = min(count($championMasteries), self::PLAYER_PICKS_COUNT);
-//            for ($i = 0; $i < $count; $i++) {
-//                $champion = $championMasteries[$i]->getChampion();
-//                $response[] = [
-//                    'id' => $champion->getId(),
-//                    'champion' => $champion->getName(),
-//                    'title' => $champion->getTitle(),
-//                    'image' => $champion->getImage(),
-//                    'level' => $championMasteries[$i],
-//                ];
-//            }
         }
         return new JsonResponse($response);
     }
@@ -246,7 +221,7 @@ class ApiController extends Controller
                     $response[] = [
                         'id' => $ban->getId(),
                         'champion' => $ban->getName(),
-                        'title' => $ban->getTitle(),
+                        'title' => $ban->getName() . ', ' . $ban->getTitle(),
                         'image' => $ban->getImage(),
                     ];
                 }
