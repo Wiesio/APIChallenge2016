@@ -66,8 +66,8 @@ class ApiController extends Controller
                 }
             }
             if ($player && !$player->getChampionMasteries()->count()) {
-                dump($this->get('riot.api.champion_mastery')
-                    ->getMasteriesByPlayerId($data->region, $player->getSummonerId()));
+                $this->get('riot.api.champion_mastery')
+                    ->getMasteriesByPlayerId($data->region, $player->getSummonerId());
             }
         }
         $statusCode = 200;

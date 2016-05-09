@@ -51,7 +51,7 @@ class ChampionApi
         }
         $championsStaticData = $this->staticDataApi->getChampions($regionId);
         if (is_array($championsStaticData)) {
-            dump($championsStaticData);
+            //dump($championsStaticData);
             $championsStaticData = new \stdClass;
         }
 
