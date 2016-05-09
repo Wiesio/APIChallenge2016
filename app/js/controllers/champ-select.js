@@ -16,8 +16,14 @@ function ChampSelectCtrl($stateProvider, UserDataService, API) {
 
     // Get user most played picks
     API.getUserPicks({
-        id: UserDataService.getUserId(),
-        region: UserDataService.getUserRegion()
+        user: {
+            id: UserDataService.getUserId(),
+            region: UserDataService.getUserRegion()
+        },
+        bans: [],
+        allyPicks: [],
+        enemyPicks: [],
+        userRole: vm.userRole
     }).success((data) => {
         vm.userPicks = data;
         vm.alerts = [];
