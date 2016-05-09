@@ -7,3 +7,5 @@ To run frontend app first you must install modules by 'npm-install'.
 After that you can run app by 'gulp dev' or 'gulp prod' to created production files(minified, gziped)
 
 Communication with backend is done by API where parameters and response are JSON objects.
+
+To style elements we use foundation framework v5, also to some angular directives we also use angular foundation.
