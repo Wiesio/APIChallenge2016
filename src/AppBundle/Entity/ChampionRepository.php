@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * ChampionRepository
@@ -56,5 +57,35 @@ class ChampionRepository extends EntityRepository
         $query = $queryBuilder->getQuery();
 
         return $query->getResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function getChampionKeys()
+    {
+        $queryBuilder = $this->createQueryBuilder('champion');
+        $queryBuilder->select('DISTINCT champion.key');
+        $query = $queryBuilder->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    /**
+     * @param string $championKey
+     * @return array
+     */
+    public function getRoles($championKey)
+    {
+        $queryBuilder = $this->createQueryBuilder('champion');
+        $queryBuilder->select('COUNT(participant.id) AS roleCount, participantTimeline.lane, participantTimeline.role')
+            ->leftJoin('champion.participants', 'participant')
+            ->leftJoin('participant.participantTimeline', 'participantTimeline')
+            ->where('champion.key = :championKey')
+            ->setParameter('championKey', $championKey)
+            ->orderBy('roleCount', 'DESC');
+        $query = $queryBuilder->getQuery();
+
+        return $query->getArrayResult();
     }
 }

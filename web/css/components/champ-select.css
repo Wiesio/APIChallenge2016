@@ -1,1 +1,44 @@
-.champ-select{margin-top:32px}.champ-select__picks-list{margin:-8px;padding:0;list-style:none}.champ-select__picks-list:after{content:'';clear:both;display:block}.champ-select__item{float:left;width:16.66666666666667%;padding:8px}.champ-select__pick{width:100%;height:auto}
+.champ-select {
+    margin-top: 32px
+}
+
+.champ-select__picks-list {
+    margin: -8px;
+    padding: 0;
+    list-style: none
+}
+
+.champ-select__picks-list:after {
+    content: '';
+    clear: both;
+    display: block
+}
+
+.champ-select__item {
+    float: left;
+    width: 16.66666666666667%;
+    padding: 8px
+}
+
+@media (max-width: 1024px) {
+    .champ-select__item {
+        width: 10%
+    }
+}
+
+@media (max-width: 767px) {
+    .champ-select__item {
+        width: 20%
+    }
+}
+
+@media (max-width: 479px) {
+    .champ-select__item {
+        width: 50%
+    }
+}
+
+.champ-select__pick {
+    width: 100%;
+    height: auto
+}

@@ -3,9 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Champion;
-use AppBundle\Entity\ChampionMastery;
 use AppBundle\Entity\ParticipantTimelineData;
 use AppBundle\Entity\Player;
+use AppBundle\Entity\ViableRole;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -90,30 +90,132 @@ class ApiController extends Controller
     public function getUserPicksAction(Request $request)
     {
         $data = json_decode($request->getContent());
-        $player = null;
-        /** @var ChampionMastery[] $championMasteries */
-        $championMasteries = [];
-        if (property_exists($data, 'id')) {
-            $playerRepository = $this->getDoctrine()->getRepository('AppBundle:Player');
-            $player = $playerRepository->find($data->id);
-            if ($player) {
-                $championMasteryApi = $this->get('riot.api.champion_mastery');
-                $championMasteries =
-                    $championMasteryApi->getMasteriesByPlayerId($player->getRegion(), $player->getSummonerId());
-            }
-        }
         $response = [];
-        $count = min(count($championMasteries), self::PLAYER_PICKS_COUNT);
-        for ($i = 0; $i < $count; $i++) {
-            $champion = $championMasteries[$i]->getChampion();
-            $response[] = [
-                'id' => $champion->getId(),
-                'champion' => $champion->getName(),
-                'title' => $champion->getTitle(),
-                'image' => $champion->getImage(),
-            ];
+        if (property_exists($data, 'bans') && property_exists($data, 'allyPicks')
+            && property_exists($data, 'enemyPicks') && property_exists($data, 'userRole')
+            && property_exists($data, 'user') && is_object($data->user)
+            && property_exists($data->user, 'region') && property_exists($data->user, 'id')
+        ) {
+            $unavailableChampionIds = [];
+            if (is_array($data->bans)) {
+                $unavailableChampionIds = array_merge($unavailableChampionIds, $data->bans);
+            }
+            if (is_array($data->allyPicks)) {
+                $unavailableChampionIds += array_merge($unavailableChampionIds, $data->allyPicks);
+            }
+            if (is_array($data->enemyPicks)) {
+                $unavailableChampionIds += array_merge($unavailableChampionIds, $data->enemyPicks);
+            }
+            $championRepository = $this->getDoctrine()->getRepository('AppBundle:Champion');
+            $playerRepository = $this->getDoctrine()->getRepository('AppBundle:Player');
+            $viableRoleRepository = $this->getDoctrine()->getRepository('AppBundle:ViableRole');
+            $player = $playerRepository->find($data->user->id);
+            /** @var Champion[] $availableChampions */
+            $availableChampions = [];
+            foreach ($player->getChampionMasteries() as $championMastery) {
+                if (!in_array($championMastery->getChampion()->getId(), $unavailableChampionIds)) {
+                    if (!$data->userRole) {
+                        $availableChampions[] = $championMastery->getChampion();
+                    } else {
+                        $champion = $championMastery->getChampion();
+                        /** @var ViableRole[] $viableRoles */
+                        $viableRoles = $viableRoleRepository->findBy(['key' => $champion->getKey()]);
+                        $roleParts = explode('-', $data->userRole);
+                        foreach ($viableRoles as $viableRole) {
+                            if ($viableRole->getLane() == $roleParts[0] && $viableRole->getRole() == $roleParts[1]) {
+                                $availableChampions[] = $champion;
+                            }
+                        }
+                    }
+                }
+            }
+            $unavailableChampions = [];
+            foreach ($championRepository->findBy(['region' => $data->user->region, 'id' => $unavailableChampionIds]) as $champion) {
+                $unavailableChampions[$champion->getId()] = $champion;
+            }
+            $matchDetailRepository = $this->getDoctrine()->getRepository('AppBundle:MatchDetail');
+            $pickCount = min(count($availableChampions), self::PLAYER_PICKS_COUNT);
+            for ($i = 0; $i < $pickCount; $i++) {
+                $champion = $availableChampions[$i];
+                $matchesWon = 0;
+                $matchesLost = 0;
+                $isAlly = $matchWon = true;
+                $isEnemy = $matchLost = false;
+                foreach ($data->allyPicks as $allyPick) {
+                    $matchesWon += $matchDetailRepository->getMatchStatistics(
+                        $champion->getKey(),
+                        $unavailableChampions[$allyPick]->getKey(),
+                        $isAlly,
+                        $matchWon
+                    );
+                }
+                foreach ($data->allyPicks as $allyPick) {
+                    $matchesLost += $matchDetailRepository->getMatchStatistics(
+                        $champion->getKey(),
+                        $unavailableChampions[$allyPick]->getKey(),
+                        $isAlly,
+                        $matchLost
+                    );
+                }
+                foreach ($data->enemyPicks as $enemyPick) {
+                    $matchesWon += $matchDetailRepository->getMatchStatistics(
+                        $champion->getKey(),
+                        $unavailableChampions[$enemyPick]->getKey(),
+                        $isEnemy,
+                        $matchWon
+                    );
+                }
+                foreach ($data->enemyPicks as $enemyPick) {
+                    $matchesLost += $matchDetailRepository->getMatchStatistics(
+                        $champion->getKey(),
+                        $unavailableChampions[$enemyPick]->getKey(),
+                        $isEnemy,
+                        $matchLost
+                    );
+                }
+                $matchCount = $matchesLost + $matchesWon;
+                $winRatio = $matchCount ? ($matchesWon / $matchCount) : 0.5;
+                $level = 0;
+                foreach ($player->getChampionMasteries() as $championMastery) {
+                    if ($championMastery->getChampion() == $champion) {
+                        $level = $championMastery->getChampionLevel();
+                    }
+                }
+                $response[] = [
+                    'id' => $champion->getId(),
+                    'champion' => $champion->getName(),
+                    'title' => $champion->getName() . ', ' . $champion->getTitle(),
+                    'image' => $champion->getImage(),
+                    'winRatio' => $winRatio,
+                    'level' => $level,
+                ];
+            }
+//            $data = json_decode($request->getContent());
+//            $player = null;
+//            /** @var ChampionMastery[] $championMasteries */
+//            $championMasteries = [];
+//            if (property_exists($data, 'id')) {
+//                $playerRepository = $this->getDoctrine()->getRepository('AppBundle:Player');
+//                $player = $playerRepository->find($data->id);
+//                if ($player) {
+//                    $championMasteryApi = $this->get('riot.api.champion_mastery');
+//                    $championMasteries =
+//                        $championMasteryApi->getMasteriesByPlayerId($player->getRegion(), $player->getSummonerId());
+//                }
+//            }
+//            $response = [];
+//            $count = min(count($championMasteries), self::PLAYER_PICKS_COUNT);
+//            for ($i = 0; $i < $count; $i++) {
+//                $champion = $championMasteries[$i]->getChampion();
+//                $response[] = [
+//                    'id' => $champion->getId(),
+//                    'champion' => $champion->getName(),
+//                    'title' => $champion->getTitle(),
+//                    'image' => $champion->getImage(),
+//                    'level' => $championMasteries[$i],
+//                ];
+//            }
         }
-
         return new JsonResponse($response);
     }
 
@@ -123,7 +225,8 @@ class ApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function getSuggestedBansAction(Request $request)
+    public
+    function getSuggestedBansAction(Request $request)
     {
         $data = json_decode($request->getContent());
         $response = [];
@@ -132,7 +235,7 @@ class ApiController extends Controller
             $bans = [];
             foreach ($championRepository->getMostPopularBans() as $ban) {
                 $bans[$ban->getKey()] = $ban;
-            }
+                }
             $regionalBans = [];
             foreach ($championRepository->findBy(['key' => array_keys($bans), 'region' => $data->region])
                      as $regionalBan) {
@@ -140,13 +243,13 @@ class ApiController extends Controller
             }
             foreach (array_keys($bans) as $key) {
                 $ban = $regionalBans[$key];
-                $response[] = [
-                    'id' => $ban->getId(),
-                    'champion' => $ban->getName(),
-                    'title' => $ban->getTitle(),
-                    'image' => $ban->getImage(),
-                ];
-            }
+                    $response[] = [
+                        'id' => $ban->getId(),
+                        'champion' => $ban->getName(),
+                        'title' => $ban->getTitle(),
+                        'image' => $ban->getImage(),
+                    ];
+                }
         }
 
         return new JsonResponse($response);
@@ -158,7 +261,8 @@ class ApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function getBanListAction(Request $request)
+    public
+    function getBanListAction(Request $request)
     {
         $data = json_decode($request->getContent());
         $response = [];
@@ -185,13 +289,14 @@ class ApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function getPicksAction(Request $request)
+    public
+    function getPicksAction(Request $request)
     {
         $data = json_decode($request->getContent());
         $response = [];
         if (property_exists($data, 'bans') && property_exists($data, 'allyPicks')
             && property_exists($data, 'enemyPicks') && property_exists($data, 'user')
-            && property_exists($data, 'region')
+            && is_object($data->user) && property_exists($data->user, 'region')
         ) {
             $unavailableChampionIds = [];
             if (is_array($data->bans)) {
@@ -203,75 +308,8 @@ class ApiController extends Controller
             if (is_array($data->enemyPicks)) {
                 $unavailableChampionIds += array_merge($unavailableChampionIds, $data->enemyPicks);
             }
-            //dump($unavailableChampionIds);
             $championRepository = $this->getDoctrine()->getRepository('AppBundle:Champion');
-            if (is_object($data->user) && property_exists($data->user, 'id')) {
-                $playerRepository = $this->getDoctrine()->getRepository('AppBundle:Player');
-                $player = $playerRepository->find($data->user->id);
-                /** @var Champion[] $availableChampions */
-                $availableChampions = [];
-                foreach ($player->getChampionMasteries() as $championMastery) {
-                    if (!in_array($championMastery->getChampion()->getId(), $unavailableChampionIds)) {
-                        $availableChampions[] = $championMastery->getChampion();
-                    }
-                }
-                $unavailableChampions = [];
-                foreach ($championRepository->findBy(['region' => $data->region, 'id' => $unavailableChampionIds]) as $champion) {
-                    $unavailableChampions[$champion->getId()] = $champion;
-                }
-                //dump($unavailableChampions);
-                $matchDetailRepository = $this->getDoctrine()->getRepository('AppBundle:MatchDetail');
-                $pickCount = min(count($availableChampions), self::PLAYER_PICKS_COUNT);
-                for ($i = 0; $i < $pickCount; $i++) {
-                    $champion = $availableChampions[$i];
-                    $matchesWon = 0;
-                    $matchesLost = 0;
-                    $isAlly = $matchWon = true;
-                    $isEnemy = $matchLost = false;
-                    foreach ($data->allyPicks as $allyPick) {
-                        $matchesWon += $matchDetailRepository->getMatchStatistics(
-                            $champion->getKey(),
-                            $unavailableChampions[$allyPick]->getKey(),
-                            $isAlly,
-                            $matchWon
-                        );
-                    }
-                    foreach ($data->allyPicks as $allyPick) {
-                        $matchesLost += $matchDetailRepository->getMatchStatistics(
-                            $champion->getKey(),
-                            $unavailableChampions[$allyPick]->getKey(),
-                            $isAlly,
-                            $matchLost
-                        );
-                    }
-                    foreach ($data->enemyPicks as $enemyPick) {
-                        $matchesWon += $matchDetailRepository->getMatchStatistics(
-                            $champion->getKey(),
-                            $unavailableChampions[$enemyPick]->getKey(),
-                            $isEnemy,
-                            $matchWon
-                        );
-                    }
-                    foreach ($data->enemyPicks as $enemyPick) {
-                        $matchesLost += $matchDetailRepository->getMatchStatistics(
-                            $champion->getKey(),
-                            $unavailableChampions[$enemyPick]->getKey(),
-                            $isEnemy,
-                            $matchLost
-                        );
-                    }
-                    $matchCount = $matchesLost + $matchesWon;
-                    $winRatio = $matchCount ? ($matchesWon / $matchCount) : 0.5;
-                    $response[] = [
-                        'id' => $champion->getId(),
-                        'champion' => $champion->getName(),
-                        'title' => $champion->getName() . ', ' . $champion->getTitle(),
-                        'image' => $champion->getImage(),
-                        'winRatio' => $winRatio,
-                    ];
-                }
-            } else {
-                $availableChampions = $championRepository->getExcept($data->region, $unavailableChampionIds);
+            $availableChampions = $championRepository->getExcept($data->user->region, $unavailableChampionIds);
                 foreach ($availableChampions as $champion) {
                     $response[] = [
                         'id' => $champion->getId(),
@@ -281,8 +319,7 @@ class ApiController extends Controller
                     ];
                 }
             }
-        }
 
         return new JsonResponse($response);
     }
-}
+    }

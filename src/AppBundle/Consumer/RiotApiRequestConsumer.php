@@ -139,7 +139,6 @@ class RiotApiRequestConsumer implements ConsumerInterface
         $result = null;
         $message = json_decode($msg->getBody());
         if (property_exists($message, 'url')) {
-            $this->keepRate();
             $url = $message->url;
             $result = $this->getResult($url);
             if (array_key_exists('statusCode', $result) && $result['statusCode'] == 429) {
@@ -147,6 +146,7 @@ class RiotApiRequestConsumer implements ConsumerInterface
                 $result = $this->getResult($url);
             }
         }
+        $this->keepRate();
 
         return $result;
     }
