@@ -3,6 +3,8 @@
 }
 
 .champ-select__picks-list {
+    overflow-y: auto;
+    height: 500px;
     margin: -8px;
     padding: 0;
     list-style: none

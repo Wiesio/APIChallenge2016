@@ -61,8 +61,13 @@ class ApiController extends Controller
                 $summonerApi = $this->get('riot.api.summoner');
                 $players = $summonerApi->getSummonersByNames($data->region, [$data->name]);
                 if (is_array($players)) {
+                    /** @var Player $player */
                     $player = current($players);
                 }
+            }
+            if ($player && !$player->getChampionMasteries()->count()) {
+                dump($this->get('riot.api.champion_mastery')
+                    ->getMasteriesByPlayerId($data->region, $player->getSummonerId()));
             }
         }
         $statusCode = 200;
