@@ -8,7 +8,7 @@ function showPercents() {
     link: (scope, element, attrs) => {
       scope.$watch("showPercents", (newValue, oldValue) => {
         let percent = parseInt(newValue * 10000) / 100;
-        element.text(percent);
+        element.text(percent + '%');
       });
     }
   };
