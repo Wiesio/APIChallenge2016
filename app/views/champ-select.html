@@ -11,6 +11,9 @@
             <span class="bans__win-ratio" show-percents="{{ pick.winRatio }}"></span>
         </li>
     </ul>
+    <p class="usage-info">
+        Above list contains champions you play most. In the upper left corner of each portrait you can find a rank you have achieved with that champion and in the lower right corner you can find predicted chance to win. Change your role and update banned and picked champions to update the list.
+    </p>
     <h3 class="section-title">Your role in team</h3>
     <div class="small-12 medium-6 medium-push-3 large-4 large-push-4">
         <select class="team__role" ng-model="champ.userRole" ng-change="champ.selectChampion()">

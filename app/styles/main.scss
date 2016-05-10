@@ -32,6 +32,11 @@ body {
 .terms {
   font-size: 12px;
 }
+.usage-info {
+  margin-top: 16px;
+  font-size: 14px;
+  text-align: left;
+}
 
 @import 'components/bans';
 @import 'components/champ-select';
