@@ -74,6 +74,8 @@ class RiotApiRequestConsumer implements ConsumerInterface
     private function keepRate()
     {
         $now = microtime(true);
+        $this->requestTimestamps[] = $now;
+        $this->requestTimestampsLength++;
         $sleepTimestamp = $now;
         $arrayEnd = $this->requestTimestampsOffset + $this->requestTimestampsLength;
         foreach ($this->apiRateLimits as $requests => &$seconds) {
@@ -95,8 +97,6 @@ class RiotApiRequestConsumer implements ConsumerInterface
         }
         $now = microtime(true);
         usleep(max(0, ceil(($sleepTimestamp - $now) * 1000000)));
-        $this->requestTimestamps[] = $now;
-        $this->requestTimestampsLength++;
     }
 
     private function getResult($uri)
